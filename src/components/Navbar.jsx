@@ -1,68 +1,55 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Drawer from "@mui/material/Drawer";
-import ClearSharpIcon from "@mui/icons-material/ClearSharp";
-import DensityMediumSharpIcon from "@mui/icons-material/DensityMediumSharp";
+import { useNavigate } from "react-router-dom"; // Corrected from useNavigation
 import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GlassCard from "./glasscard/GlassCard";
 import XIcon from "@mui/icons-material/X";
-import { useNavigate } from "react-router-dom"; // Corrected from useNavigation
+import GroupsIcon from "@mui/icons-material/Groups";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import SettingsSuggestOutlinedIcon from "@mui/icons-material/SettingsSuggestOutlined";
+import RecentActorsIcon from "@mui/icons-material/RecentActors";
 
-const Home = () => {
-  return <h1 className="headingGlassCard">Home</h1>;
-};
-const AboutUs = () => {
-  return <h1 className="headingGlassCard">About Us</h1>;
-};
-const Services = () => {
-  return <h1 className="headingGlassCard">Services</h1>;
-};
-const Products = () => {
-  return <h1 className="headingGlassCard">Products</h1>;
-};
-const TeamOverView = () => {
-  return <h1 className="headingGlassCard">Team Overview</h1>;
-};
-const ContactUs = () => {
-  return <h1 className="headingGlassCard">Contact Us</h1>;
-};
+const Home = () => <h1 className="headingGlassCard">Home</h1>;
+const AboutUs = () => <h1 className="headingGlassCard">About Us</h1>;
+const Services = () => <h1 className="headingGlassCard">Services</h1>;
+const ContactUs = () => <h1 className="headingGlassCard">Contact Us</h1>;
 
 export default function Navbar() {
   const navigate = useNavigate(); // Correct hook for navigation
-  const [isOpen, setIsOpen] = useState(false);
   const [hoveredComponent, setHoveredComponent] = useState(null);
   const [isGlassCardOpen, setIsGlassCardOpen] = useState(false);
+  const [clickedComponent, setClickedComponent] = useState(null); // Track which component is clicked
 
-  const toggleDrawer = (newOpen) => () => {
-    console.log("toggle drawer", newOpen);
-    setIsOpen(newOpen);
+  const style = {
+    fontSize: "10px",
+    color: "white",
   };
 
   const tempMap = {
     Home: {
       navigateTo: "/home",
-      component: <Home />,
+      component: <Home style={{ ...style }} />,
+      icon: HomeRoundedIcon,
+      text: "Home",
     },
     AboutUs: {
       navigateTo: "/about-us",
       component: <AboutUs />,
+      icon: GroupsIcon,
+      text: "About Us",
     },
     Services: {
       navigateTo: "/services",
       component: <Services />,
-    },
-    Products: {
-      navigateTo: "/products",
-      component: <Products />,
-    },
-    TeamOverView: {
-      navigateTo: "/team-overview",
-      component: <TeamOverView />,
+      icon: SettingsSuggestOutlinedIcon,
+      text: "Services",
     },
     ContactUs: {
       navigateTo: "/contact-us",
       component: <ContactUs />,
+      icon: RecentActorsIcon,
+      text: "Contact Us",
     },
   };
 
@@ -77,57 +64,52 @@ export default function Navbar() {
   };
 
   const handleNavigation = (component) => {
-    setIsOpen(false);
-    toggleDrawer(false);
-    setIsGlassCardOpen(false);
-
     const route = tempMap[component].navigateTo;
+
     navigate(route);
+    setIsGlassCardOpen(false); // close the glass card
+    setClickedComponent(component); // set the clicked component to keep the text shown
   };
 
   return (
     <NavbarDiv>
-      <MenuButton onClick={toggleDrawer(!isOpen)}>
-        {!isOpen ? (
-          <DensityMediumSharpIcon sx={{ color: "white" }} />
-        ) : (
-          <ClearSharpIcon sx={{ color: "white" }} />
-        )}
-      </MenuButton>
-      <Drawer
-        variant="persistent"
-        hideBackdrop
-        open={isOpen}
-        onClose={toggleDrawer(false)}
-      >
-        <NavItems>
-          {Object.keys(tempMap).map((key) => (
-            // <NavButtonsWrapper>
-            <NavButtonsBorder>
-              <NavButtons
-                key={key}
-                onMouseEnter={() => handleHover(key)}
-                onMouseLeave={clearHover}
-                onClick={() => handleNavigation(key)}
-              >
-                {key}
-              </NavButtons>
+      <NavItems>
+        {Object.keys(tempMap).map((key) => {
+          const IconComponent = tempMap[key].icon;
+          const isHovered = hoveredComponent === key;
+          const isClicked = clickedComponent === key;
+
+          return (
+            <NavButtonsBorder
+              key={key}
+              onMouseEnter={() => handleHover(key)}
+              onMouseLeave={clearHover}
+              onClick={() => handleNavigation(key)}
+              isHovered={isHovered || isClicked}
+            >
+              <NavButtonsWrapper>
+                <IconComponent sx={{ color: "white", fontSize: "35px" }} />
+                <NavButtonsText isHovered={isHovered || isClicked}>
+                  {tempMap[key].text}
+                </NavButtonsText>
+              </NavButtonsWrapper>
             </NavButtonsBorder>
-            // </NavButtonsWrapper>
-          ))}
-        </NavItems>
-        <Icons>
-          <div>
-            <FacebookIcon />
-          </div>
-          <div>
-            <InstagramIcon />
-          </div>
-          <div>
-            <XIcon />
-          </div>
-        </Icons>
-      </Drawer>
+          );
+        })}
+      </NavItems>
+
+      <Icons>
+        <div>
+          <FacebookIcon />
+        </div>
+        <div>
+          <InstagramIcon />
+        </div>
+        <div>
+          <XIcon />
+        </div>
+      </Icons>
+
       {isGlassCardOpen && (
         <GlassCard>
           {hoveredComponent && tempMap[hoveredComponent].component}
@@ -138,59 +120,69 @@ export default function Navbar() {
 }
 
 const NavbarDiv = styled.div`
-  height: 50px;
-  .MuiPaper-root {
-    width: 30%;
-    display: flex;
-    flex-direction: column;
-    row-gap: 10em;
-    padding-top: 3em;
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    border: 1px solid rgba(209, 213, 219, 0.3);
-  }
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.5em;
+  justify-content: space-around;
+
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding: 10px;
+  margin-left: 1rem;
+  height: 100%;
+
+  /* background-color: rgba(0, 0, 0, 0.6); */
 `;
+
 const NavItems = styled.div`
   display: flex;
   flex-direction: column;
-  row-gap: 3em;
-  align-items: center;
-  margin-left: auto;
-  margin-right: auto;
+  row-gap: 1.5em;
+
+  /* align-items: center; */
 `;
-const MenuButton = styled.div`
-  padding-top: 1em;
-  padding-left: 97%;
-`;
-const NavButtons = styled.div`
-  color: white;
-  cursor: pointer;
-`;
+
 const NavButtonsBorder = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  /* height: 100%;
-  width: 60%; */
-  height: 2.6rem;
-  width: 15rem;
+  height: 3rem;
+  width: 9rem;
+  padding: 0 1rem;
   border-radius: 25px;
-  /* Initially, hide the border */
   border: 1px solid transparent;
-  transition: border-color 0.3s ease; /* Add a smooth transition effect */
+
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+
+  ${({ isHovered }) =>
+    isHovered &&
+    `
+      border-color: rgba(209, 213, 219, 0.3);
+      background-color: rgba(255, 255, 255, 0.1) ;
+    `}
 
   &:hover {
-    /* When hovering, show the border */
-
-    border-color: rgba(209, 213, 219, 0.3);
+    background-color: transparent;
   }
 `;
+
 const NavButtonsWrapper = styled.div`
-  width: 100%;
-  height: 2.6rem;
+  display: flex;
+  column-gap: 1rem;
+  align-items: center;
+  color: white;
+  justify-content: center;
+  align-items: center;
 `;
+
+const NavButtonsText = styled.span`
+  opacity: ${({ isHovered }) => (isHovered ? 1 : 0)};
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+  color: white;
+`;
+
 const Icons = styled.div`
   display: flex;
   width: 100%;

@@ -6,6 +6,7 @@ import Home from "./pages/home/Home";
 import Services from "./pages/support/Support";
 import AboutUs from "./pages/about/About";
 import ContactUs from "./pages/contact/Contact";
+import styled from "styled-components";
 function App() {
   return (
     <Router>
@@ -21,5 +22,7 @@ function App() {
     </Router>
   );
 }
+
+const AppWrrappe = styled.div``;
 
 export default App;

@@ -7,8 +7,8 @@ export default function GlassCard({ children }) {
 
 const Card = styled.div`
   position: absolute;
-  top: 20%;
-  left: 50%;
+  top: 15%;
+  left: 170%;
   width: 50em;
   height: 30em;
   padding: 20px;
