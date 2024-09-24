@@ -8,4 +8,7 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 date : 20/09/2024
-work : removed the drawer functionality ,added the icons for all the pages , added the hover effect for navbar icons and improved the glasscard animation
+work : removed the drawer functionality ,added the icons for all the pages , added the hover effect for navbar icons and
+
+improved the glasscard animation
+24/09/2024 logo and ripple effect added

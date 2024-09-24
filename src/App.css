@@ -6,7 +6,8 @@ body {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
-  background: url("https://media.istockphoto.com/id/1341371767/photo/loading-concept-with-cube-blocks-minimal-style.jpg?s=2048x2048&w=is&k=20&c=qM0J6S4yCSC5DbT8EDsxnwO7-oeT0eaNQaM3EKIIzFI=");
+  background-color: black;
+  /* background: url("https://media.istockphoto.com/id/1341371767/photo/loading-concept-with-cube-blocks-minimal-style.jpg?s=2048x2048&w=is&k=20&c=qM0J6S4yCSC5DbT8EDsxnwO7-oeT0eaNQaM3EKIIzFI="); */
 }
 
 .pageHeading {

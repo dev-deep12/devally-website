@@ -16,10 +16,10 @@ const Services = () => <h1 className="headingGlassCard">Services</h1>;
 const ContactUs = () => <h1 className="headingGlassCard">Contact Us</h1>;
 
 export default function Navbar() {
-  const navigate = useNavigate(); // Correct hook for navigation
+  const navigate = useNavigate();
   const [hoveredComponent, setHoveredComponent] = useState(null);
   const [isGlassCardOpen, setIsGlassCardOpen] = useState(false);
-  const [clickedComponent, setClickedComponent] = useState(null); // Track which component is clicked
+  const [clickedComponent, setClickedComponent] = useState(null);
 
   const style = {
     fontSize: "10px",
@@ -71,6 +71,31 @@ export default function Navbar() {
     setClickedComponent(component); // set the clicked component to keep the text shown
   };
 
+  const handleRippleEffect = (e) => {
+    const button = e.currentTarget;
+    const ripple = document.createElement("span");
+
+    // Get the size of the button
+    const buttonRect = button.getBoundingClientRect();
+    const size = Math.max(buttonRect.width, buttonRect.height);
+    ripple.style.width = ripple.style.height = `${size}px`;
+
+    // Position the ripple at the click position
+    const x = e.clientX - buttonRect.left - size / 2;
+    const y = e.clientY - buttonRect.top - size / 2;
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+
+    // Add the ripple element
+    ripple.classList.add("ripple");
+    button.appendChild(ripple);
+
+    // Remove the ripple after animation completes
+    setTimeout(() => {
+      ripple.remove();
+    }, 1000);
+  };
+
   return (
     <NavbarDiv>
       <NavItems>
@@ -84,7 +109,10 @@ export default function Navbar() {
               key={key}
               onMouseEnter={() => handleHover(key)}
               onMouseLeave={clearHover}
-              onClick={() => handleNavigation(key)}
+              onClick={(e) => {
+                handleNavigation(key);
+                handleRippleEffect(e);
+              }}
               isHovered={isHovered || isClicked}
             >
               <NavButtonsWrapper>
@@ -144,6 +172,7 @@ const NavItems = styled.div`
 `;
 
 const NavButtonsBorder = styled.div`
+  position: relative; /* Important for ripple positioning */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -152,18 +181,36 @@ const NavButtonsBorder = styled.div`
   padding: 0 1rem;
   border-radius: 25px;
   border: 1px solid transparent;
-
+  overflow: hidden;
+  cursor: pointer;
   transition: border-color 0.3s ease, background-color 0.3s ease;
 
   ${({ isHovered }) =>
     isHovered &&
     `
       border-color: rgba(209, 213, 219, 0.3);
-      background-color: rgba(255, 255, 255, 0.1) ;
+      background-color: rgba(255, 255, 255, 0.1);
     `}
 
   &:hover {
     background-color: transparent;
+  }
+
+  /* Ripple effect styles */
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(0);
+    animation: ripple-animation 600ms linear;
+    pointer-events: none; /* Ensures ripple doesn’t interfere with other events */
+  }
+
+  @keyframes ripple-animation {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
   }
 `;
 

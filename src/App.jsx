@@ -7,9 +7,12 @@ import Services from "./pages/support/Support";
 import AboutUs from "./pages/about/About";
 import ContactUs from "./pages/contact/Contact";
 import styled from "styled-components";
+import LandingPage from "./pages/landing-page";
+import Logo from "./components/logo";
 function App() {
   return (
     <Router>
+      <Logo />
       <Navbar />
       <Routes>
         <Route path="/home" element={<Home />} />
@@ -17,6 +20,7 @@ function App() {
         <Route path="/services" element={<Services />} />
         {/* <Route path="/products" element={<Products />} />
         <Route path="/team-overview" element={<TeamOverView />} /> */}
+        <Route path="/" element={<LandingPage />} />
         <Route path="/contact-us" element={<ContactUs />} />
       </Routes>
     </Router>
